@@ -1,0 +1,44 @@
+name: Auto Commits + PR + Issues
+
+on:
+  workflow_dispatch:
+
+jobs:
+  auto-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Make 10 commits
+        run: |
+          for i in {1..10}; do
+            echo "Commit $i" >> file.txt
+            git config user.name "github-actions"
+            git config user.email "action@github.com"
+            git add file.txt
+            git commit -m "Commit $i"
+          done
+          git push
+
+      - name: Create PR branch
+        run: |
+          git checkout -b feature-branch
+          echo "PR commit" >> file.txt
+          git add .
+          git commit -m "PR commit"
+          git push origin feature-branch
+
+      - name: Create PR
+        run: |
+          gh pr create -B main -H feature-branch -t "Automated PR" -b "Created by GitHub Actions"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create 10 Issues
+        run: |
+          for i in {1..10}; do
+            gh issue create -t "Issue $i" -b "Auto-created issue $i"
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
