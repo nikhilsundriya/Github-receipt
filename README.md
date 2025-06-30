@@ -2,7 +2,7 @@
 
 Generate a receipt-style summary of your GitHub profile. Showcase your repositories, stars, and contributions in a unique, receipt-style summary. It's the perfect way to visualize your GitHub journey and celebrate your coding milestones.
 
-![image](https://github.com/user-attachments/assets/30486c89-e563-4cf9-ac68-05475ccf3311)
+![image](file:///C:/Users/nikhi/OneDrive/Pictures/Screenshots/Screenshot%202025-06-30%20090708.png)
 
 ## Table of Contents
 
