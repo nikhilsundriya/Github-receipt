@@ -10,35 +10,42 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Setup Git user
+        run: |
+          git config user.name "github-actions"
+          git config user.email "action@github.com"
+
       - name: Make 10 commits
         run: |
           for i in {1..10}; do
             echo "Commit $i" >> file.txt
-            git config user.name "github-actions"
-            git config user.email "action@github.com"
             git add file.txt
             git commit -m "Commit $i"
           done
-          git push
+          git push origin main
 
-      - name: Create PR branch
+      - name: Create a feature branch for PR
         run: |
           git checkout -b feature-branch
-          echo "PR commit" >> file.txt
+          echo "PR Commit" >> file.txt
           git add .
           git commit -m "PR commit"
           git push origin feature-branch
 
-      - name: Create PR
-        run: |
-          gh pr create -B main -H feature-branch -t "Automated PR" -b "Created by GitHub Actions"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "Automated PR"
+          body: "This PR was created automatically"
+          base: main
+          head: feature-branch
 
       - name: Create 10 Issues
         run: |
           for i in {1..10}; do
-            gh issue create -t "Issue $i" -b "Auto-created issue $i"
+            curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/issues \
+            -d "{\"title\":\"Issue $i\",\"body\":\"Auto-created issue $i\"}"
           done
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
