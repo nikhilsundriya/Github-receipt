@@ -1,6 +1,5 @@
 import { Github, Instagram, Linkedin, Twitter } from "lucide-react";
 import React from "react";
-
 export default function Footer() {
   return (
     <footer className="w-full border-t py-6 mt-10 flex flex-col justify-center items-center gap-4">
